@@ -82,11 +82,11 @@ Segue documentação em arquivo PDF dos detalhes do projeto: Descrição, Stack 
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org/) (v18+)
-- [Python](https://www.python.org/) (v3.10+)
+- [Python](https://www.python.org/) (Recomendado v3.12 ou v3.13 Estável - Versão utilizada foi a v3.13.17)
 
 ---
 
-### 📦 Instalação
+### 📦 Instalação e Configuração
 
 **1. Clone o repositório**
 ```bash
@@ -94,17 +94,31 @@ git clone https://github.com/ryangs22/Aurora.git
 cd Aurora
 ```
 
-**2. Instale as dependências do Frontend**
+**2. Configuração do Frontend (React)**
 ```bash
 cd frontend
 npm install
+cd ..
 ```
 
-**3. Instale as dependências do Backend**
+**3. Configuração do Backend (FastAPI)**
 ```bash
 cd backend
-python -m venv venv
+
+# Criar o ambiente virtual forçando a versão estável recomendada
+py -3.13 -m venv venv
+
+# Ative o ambiente virtual para instalar os pacotes:
+# No Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# No Linux / macOS:
+source venv/bin/activate
+
+# Instalar todas as dependências do projeto de uma vez só
+pip install -r requirements.txt
+cd ..
 ```
+> 💡 *Nota para Windows:* Se o PowerShell apresentar um erro de "execução de scripts desabilitada" ao tentar ativar a venv, abra o PowerShell como **Administrador** e execute o comando: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` para liberar o uso.
 
 ---
 
@@ -116,17 +130,14 @@ python -m venv venv
 ```bash
 cd backend
 
-# Windows
-venv\Scripts\activate
-
-# Linux / macOS
+# Ativação do ambiente virtual
+# No Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# No Linux / macOS:
 source venv/bin/activate
 
-# Instalar dependências Python (apenas na primeira vez)
-pip install -r requirements.txt
-
-# Iniciar o servidor
-uvicorn app.main:app --reload
+# Iniciar o servidor de forma segura através do módulo Python
+python -m uvicorn app.main:app --reload
 ```
 > O backend estará disponível em `http://localhost:8000`
 
