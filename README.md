@@ -90,8 +90,8 @@ Segue documentação em arquivo PDF dos detalhes do projeto: Descrição, Stack 
 
 **1. Clone o repositório**
 ```bash
-git clone https://github.com/ryangs22/Aurora-Gametracker.git
-cd Aurora-Gametracker
+git clone https://github.com/ryangs22/Aurora.git
+cd Aurora
 ```
 
 **2. Instale as dependências do Frontend**
