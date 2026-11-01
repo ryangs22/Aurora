@@ -33,7 +33,7 @@ export default function AppShell({ user, onLogout, currentPage, onNavigate, chil
     <div className="flex flex-col h-full p-4">
       <div className="flex items-center gap-2.5 mb-8 px-2">
         <Sparkles className="w-5 h-5 text-purple-400" />
-        <span className="text-white font-black tracking-[0.15em] text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>NOCTIS</span>
+        <span className="text-white font-black tracking-[0.15em] text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>AURORA</span>
       </div>
       <nav className="flex flex-col gap-1 flex-1">
         {NAV_ITEMS.map(item => <NavLink key={item.id} item={item} />)}
@@ -84,7 +84,7 @@ export default function AppShell({ user, onLogout, currentPage, onNavigate, chil
       {/* Mobile header */}
       <header className="md:hidden fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-4 py-3"
         style={{ background: 'rgba(8,4,20,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <span className="text-white font-black tracking-[0.15em]" style={{ fontFamily: "'Orbitron', sans-serif" }}>NOCTIS</span>
+        <span className="text-white font-black tracking-[0.15em]" style={{ fontFamily: "'Orbitron', sans-serif" }}>AURORA</span>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="text-white/60 hover:text-white p-2 -mr-1 touch-manipulation">
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>

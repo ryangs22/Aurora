@@ -1,0 +1,21 @@
+# Ambientes Virtuais do Python
+backend/venv/
+venv/
+.venv/
+
+# Arquivos temporários do Python e Cache
+backend/app/__pycache__/
+__pycache__/
+*.pyc
+
+# Banco de dados local (Evita subir seus dados de teste)
+backend/banco.db
+*.db
+
+# Dependências do Frontend
+frontend/node_modules/
+node_modules/
+
+# Variáveis de ambiente / Chaves secretas
+.env
+backend/.env

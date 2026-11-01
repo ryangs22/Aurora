@@ -29,7 +29,7 @@ const RATING_TITLES = [
   { name: 'Semideus', min: 20, max: 29, color: '#06b6d4', icon: Star },
   { name: 'Feiticeiro', min: 30, max: 44, color: '#8b5cf6', icon: Wand2 },
   { name: 'Celestial', min: 45, max: 59, color: '#f472b6', icon: Sparkles },
-  { name: 'Deus de Noctis', min: 60, max: Infinity, color: '#ffffff', icon: InfinityIcon },
+  { name: 'Estrela Aúrea', min: 60, max: Infinity, color: '#ffffff', icon: InfinityIcon },
 ];
 
 function getRank(list, count) {
@@ -88,7 +88,7 @@ function StatCard({ icon: Icon, label, value, color }) {
 export default function ProfilePage({ appState }) {
   const { state, updateProfile } = appState;
   const { library } = state;
-  const user = state.user || { name: 'Explorador', email: 'demo@noctis.app', avatar: 'E' };
+  const user = state.user || { name: 'Explorador', email: 'demo@aurora.app', avatar: 'E' };
 
   const [editing, setEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);

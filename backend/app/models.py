@@ -1,13 +1,11 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Float, Text
 from sqlalchemy.orm import relationship, validates
-from abc import ABC, abstractmethod
 from .database import Base
 
-class IExportavel(ABC):
-    @abstractmethod
+class IExportavel:
     def exportar_dados(self):
         """Método que toda classe que assinar este contrato deve ter"""
-        pass
+        raise NotImplementedError("Você deve implementar o método exportar_dados")
 
 def processar_exportacao(entidade: IExportavel):
     return entidade.exportar_dados()
@@ -89,5 +87,8 @@ class Lista(Base, IExportavel):
     criado_em = Column(Float)
 
     # IMPLEMENTAÇÃO DO POLIMORFISMO
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def exportar_dados(self):
         return {"tipo": "Lista Customizada", "nome_lista": self.nome, "jogos_contidos": self.jogos}

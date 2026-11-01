@@ -215,7 +215,7 @@ export function useAppState() {
         return true;
       } else {
         const err = await response.json();
-        alert(err.detail || "Erro ao atualizar perfil da base NOCTIS.");
+        alert(err.detail || "Erro ao atualizar perfil AURORA.");
         return false;
       }
     } catch (error) {

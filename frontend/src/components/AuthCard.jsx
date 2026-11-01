@@ -175,7 +175,7 @@ export default function AuthCard() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} onSubmit={handleLogin} className="space-y-5"
             >
               <div className="text-center mb-2">
-                <h2 className="text-xl font-bold text-white tracking-tight">Bem-vindo ao Universo NOCTIS</h2>
+                <h2 className="text-xl font-bold text-white tracking-tight">A AURORA do universo lhe aguarda</h2>
                 <p className="text-white/35 text-sm mt-1">Entre na sua conta</p>
               </div>
 
@@ -202,7 +202,7 @@ export default function AuthCard() {
             >
               <div className="text-center mb-2">
                 <h2 className="text-xl font-bold text-white tracking-tight">Criar conta</h2>
-                <p className="text-white/35 text-sm mt-1">Junte-se ao universo NOCTIS</p>
+                <p className="text-white/35 text-sm mt-1">Junte-se a AURORA</p>
               </div>
 
               <InputField icon={User} placeholder="Nome de usuário" value={signupName} onChange={(e) => setSignupName(e.target.value)} />

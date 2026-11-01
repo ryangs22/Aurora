@@ -94,7 +94,7 @@ export default function Landing() {
               className="relative text-6xl sm:text-7xl md:text-8xl font-black tracking-[0.18em] text-transparent bg-clip-text bg-gradient-to-b from-white via-white/90 to-white/50 select-none"
               style={{ fontFamily: "'Orbitron', sans-serif", textShadow: '0 0 60px rgba(180,120,255,0.4)' }}
             >
-              NOCTIS
+              AURORA
             </h1>
           </div>
           <p className="mt-3 text-white/25 text-sm tracking-[0.3em] uppercase font-light">Game Tracker</p>
@@ -111,7 +111,7 @@ export default function Landing() {
         </div>
 
         <p className="mt-10 text-white/15 text-xs tracking-widest">
-          © 2026 NOCTIS — Rastreie suas conquistas entre as estrelas
+          © 2026 AURORA — Rastreie suas conquistas entre as estrelas
         </p>
       </div>
     </div>

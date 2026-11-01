@@ -206,7 +206,7 @@ export default function AuthPage({ onLogin }) {
       <div className="relative w-full max-w-md mx-auto px-4 py-12" style={{ zIndex: 3 }}>
         <motion.div className="text-center mb-8" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <h1 className="text-5xl font-black tracking-[0.18em] text-transparent bg-clip-text bg-gradient-to-b from-white via-white/90 to-white/50 select-none"
-            style={{ fontFamily: "'Orbitron', sans-serif", textShadow: '0 0 60px rgba(180,120,255,0.4)' }}>NOCTIS</h1>
+            style={{ fontFamily: "'Orbitron', sans-serif", textShadow: '0 0 60px rgba(180,120,255,0.4)' }}>AURORA</h1>
           <p className="mt-2 text-white/25 text-xs tracking-[0.3em] uppercase">Game Tracker</p>
         </motion.div>
 
@@ -220,7 +220,7 @@ export default function AuthPage({ onLogin }) {
                 transition={{ duration: 0.3 }} onSubmit={handleLogin} className="space-y-4">
                 <div className="text-center mb-1">
                   <h2 className="text-xl font-bold text-white">Bem-vindo de volta</h2>
-                  <p className="text-white/35 text-sm mt-1">Entre na sua conta NOCTIS</p>
+                  <p className="text-white/35 text-sm mt-1">Entre na sua conta AURORA</p>
                 </div>
                 <Alert type={alert?.type} msg={alert?.msg} />
                 <Field icon={Mail} type="email" placeholder="Email" value={lEmail} onChange={e => setLEmail(e.target.value)} error={lErrors.email} />
@@ -240,7 +240,7 @@ export default function AuthPage({ onLogin }) {
                 transition={{ duration: 0.3 }} onSubmit={handleSignup} className="space-y-4">
                 <div className="text-center mb-1">
                   <h2 className="text-xl font-bold text-white">Criar conta</h2>
-                  <p className="text-white/35 text-sm mt-1">Junte-se ao universo NOCTIS</p>
+                  <p className="text-white/35 text-sm mt-1">Junte-se a AURORA</p>
                 </div>
                 <Alert type={alert?.type} msg={alert?.msg} />
                 <Field icon={User} placeholder="Nome de usuário" value={sName} onChange={e => setSName(e.target.value)} error={sErrors.name} />
