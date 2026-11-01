@@ -2,12 +2,12 @@
 
 <br/>
 
-# 🌌 NOCTIS
+# 🌌 AURORA 🌌
 ### *Rastreie suas conquistas entre as estrelas*
 
 <br/>
 
-> **NOCTIS** é um game tracker pessoal completo, onde você pode organizar sua biblioteca de jogos, acompanhar seu progresso, avaliar títulos, criar listas personalizadas e explorar o que está em alta — tudo com autenticação real e dados persistentes por usuário.
+> **AURORA** é um game tracker pessoal completo, onde você pode organizar sua biblioteca de jogos, acompanhar seu progresso, avaliar títulos, criar listas personalizadas e explorar o que está em alta — tudo com autenticação real e dados persistentes por usuário.
 
 <br/>
 
@@ -90,8 +90,8 @@ Segue documentação em arquivo PDF dos detalhes do projeto: Descrição, Stack 
 
 **1. Clone o repositório**
 ```bash
-git clone https://github.com/seu-usuario/noctis.git
-cd noctis
+git clone https://github.com/ryangs22/Aurora-Gametracker.git
+cd Aurora-Gametracker
 ```
 
 **2. Instale as dependências do Frontend**
@@ -145,6 +145,6 @@ npm run dev
 
 <br/>
 
-*© 2026 NOCTIS — Rastreie suas conquistas entre as estrelas* 🌌
+*© 2026 AURORA — Rastreie suas conquistas entre as estrelas* 🌌
 
 </div>
