@@ -19,3 +19,8 @@ node_modules/
 # Variáveis de ambiente / Chaves secretas
 .env
 backend/.env
+frontend/.env
+
+# Build do Frontend (Vite)
+frontend/dist/
+dist/

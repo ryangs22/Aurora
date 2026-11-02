@@ -1,4 +1,4 @@
-const API_KEY = 'f72b1bbe34aa416c8a16705624de5b7f';
+const API_KEY = import.meta.env.VITE_RAWG_API_KEY;
 const BASE_URL = 'https://api.rawg.io/api';
 
 const getDates = () => {

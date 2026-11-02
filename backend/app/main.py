@@ -1,3 +1,9 @@
+import os
+from dotenv import load_dotenv
+
+# Carrega as variáveis do .env logo no início
+load_dotenv()
+
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -140,8 +146,14 @@ def update_user_me(
 # FUNÇÃO DE ENVIO DE E-MAIL
 # ==========================================
 def send_recovery_email(to_email: str, code: str):
-    sender_email = "ryansilva132020@gmail.com"  
-    sender_password = "ikyjrtgjimthpfzd" 
+    # Puxando os dados sensíveis do arquivo .env
+    sender_email = os.getenv("SENDER_EMAIL")  
+    sender_password = os.getenv("SENDER_PASSWORD") 
+
+    # Trava de segurança caso o .env não esteja configurado
+    if not sender_email or not sender_password:
+        print("Erro: Credenciais de e-mail não encontradas no arquivo .env!")
+        return False
 
     msg = MIMEMultipart()
     msg['From'] = f"NOCTIS <{sender_email}>"

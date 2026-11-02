@@ -6,6 +6,9 @@ import StarfieldBackground from '../StarfieldBackground';
 const INPUT = "w-full bg-white/[0.06] border border-white/[0.1] rounded-xl px-4 py-3 pl-11 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.08] focus:ring-1 focus:ring-purple-500/20 transition-all duration-300";
 const BTN = "w-full py-3 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 disabled:opacity-50 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-purple-900/25";
 
+// Puxando a URL dinamicamente do .env
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 function validatePassword(p) { return p.length >= 6; }
 
@@ -86,7 +89,7 @@ export default function AuthPage({ onLogin }) {
     formData.append('password', lPw);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/login', {
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData
@@ -119,7 +122,7 @@ export default function AuthPage({ onLogin }) {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/register', {
+      const res = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: sName, email: sEmail, password: sPw })
@@ -146,7 +149,7 @@ export default function AuthPage({ onLogin }) {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/password-recovery/request', {
+      const res = await fetch(`${API_BASE_URL}/password-recovery/request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: fEmail })
@@ -174,7 +177,7 @@ export default function AuthPage({ onLogin }) {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/password-recovery/reset', {
+      const res = await fetch(`${API_BASE_URL}/password-recovery/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: fEmail, code: fCode, new_password: fNewPw })

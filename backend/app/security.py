@@ -1,8 +1,17 @@
+import os
 from datetime import datetime, timedelta
 import jwt
 from passlib.context import CryptContext
+from dotenv import load_dotenv
 
-SECRET_KEY = "chave_super_secreta_do_noctis" 
+# Carrega as variáveis do .env
+load_dotenv()
+
+# Puxa a chave de segurança. Se não existir, trava a aplicação.
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError("A SECRET_KEY não foi configurada no arquivo .env!")
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 360
 
