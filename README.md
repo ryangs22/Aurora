@@ -4,6 +4,7 @@
 
 # 🌌 AURORA 🌌
 ### *Rastreie suas conquistas entre as estrelas*
+### *⚠️ ATUALIZAÇÃO GRAVE: TRANSIÇÃO DE API (RAWG -> IGDB) DEVIDO AO SITE FORA DO AR (ERRO 522) ⚠️*
 
 <br/>
 
