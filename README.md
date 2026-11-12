@@ -16,7 +16,7 @@
 ![Stack](https://img.shields.io/badge/Estilo-Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwindcss)
 ![Stack](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)
 ![Stack](https://img.shields.io/badge/Banco-SQLite-003B57?style=for-the-badge&logo=sqlite)
-![Stack](https://img.shields.io/badge/API-RAWG-FF5722?style=for-the-badge)
+![Stack](https://img.shields.io/badge/API-IGDB-9147FF?style=for-the-badge)
 
 </div>
 
@@ -31,7 +31,7 @@
 | **Backend** | FastAPI |
 | **Banco de Dados** | SQLite |
 | **Autenticação** | JWT Token |
-| **API Externa** | [RAWG Video Games Database](https://rawg.io/) |
+| **API Externa** | [IGDB - Internet Game Database](https://www.igdb.com/) |
 
 </div>
 
@@ -41,7 +41,7 @@
 Autenticação segura com tokens JWT. Cada usuário possui dados completamente isolados dos demais.
 
 **2. 🔍 Busca de Jogos via API:**
-Pesquisa em tempo real no catálogo da RAWG com mais de 500 mil títulos, com debounce automático e exibição de jogos populares na abertura.
+Pesquisa em tempo real no catálogo da IGDB, com debounce automático e exibição de jogos populares na abertura.
 
 **3. 🎮 Definição de Status por Jogo:**
 Marque cada jogo com um status personalizado: `Jogado`, `Jogando`, `Quero Jogar`, `Abandonado` ou `Platinado`.
@@ -62,7 +62,7 @@ Crie listas temáticas, adicione ou remova jogos com um clique e reordene como q
 Veja seus dados em tempo real: jogos na biblioteca, gênero preferido, horas jogadas, melhor e pior jogo avaliado, conquistas desbloqueadas e sistema de ranks por progresso.
 
 **9. 📈 Aba de Jogos Trending do Momento:**
-Exibe os jogos mais adicionados no último ano e o Top 5 mais bem avaliados, com dados ao vivo da RAWG.
+Exibe os jogos mais adicionados no último ano e o Top 5 mais bem avaliados, com dados ao vivo da IGDB.
 
 **10. 📖 Descrição dos Jogos:**
 Cada jogo exibe sinopse traduzida para PT-BR automaticamente (API mymemory pode falhar em alguns casos sendo limitada a um número específico de caracteres), data de lançamento completa, nota da comunidade e plataformas disponíveis.
@@ -84,6 +84,7 @@ Segue documentação em arquivo PDF dos detalhes do projeto: Descrição, Stack 
 
 - [Node.js](https://nodejs.org/) (v18+)
 - [Python](https://www.python.org/) (Recomendado v3.12 ou v3.13 Estável - Versão utilizada foi a v3.13.17)
+- Uma conta na [Twitch](https://dev.twitch.tv/console) para gerar as credenciais gratuitas da API da IGDB (**Client ID** e **Client Secret**)
 
 ---
 
