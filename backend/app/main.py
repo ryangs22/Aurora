@@ -1,4 +1,5 @@
 import os
+import re
 import time
 import asyncio
 import logging
@@ -344,6 +345,25 @@ SORT_OPTIONS = {
 }
 
 
+def _clean_term(text: str) -> str:
+    """Remove caracteres que quebrariam a consulta Apicalypse."""
+    return re.sub(r'[\\"*]', " ", text).strip()
+
+
+def _build_query(where=None, sort_clause=None, search_text=None, limit=40, offset=0) -> str:
+    parts = []
+    if search_text:
+        parts.append(f'search "{search_text}";')
+    parts.append(f"fields {GAME_FIELDS};")
+    if where:
+        parts.append("where " + " & ".join(where) + ";")
+    if sort_clause:
+        parts.append(f"sort {sort_clause};")
+    parts.append(f"limit {limit};")
+    parts.append(f"offset {offset};")
+    return " ".join(parts)
+
+
 @app.get("/api/games")
 async def list_games(
     search: str = None,
@@ -370,31 +390,58 @@ async def list_games(
     if min_votes is not None:
         where.append(f"total_rating_count >= {int(min_votes)}")
 
-    parts = []
-    clean_search = None
-    if search:
-        clean_search = search.replace("\\", " ").replace('"', " ").strip()[:100]
+    offset = (page - 1) * page_size
+    clean_search = _clean_term(search)[:100] if search else ""
 
+    # ---------- BUSCA POR TEXTO ----------
+    # A busca nativa da IGDB ("search") só casa palavras inteiras: "assass" não acha nada.
+    # 2 soluções para contornar isso, combinadas:
+    #  A) "contém": cada palavra digitada precisa estar no nome (aceita pedaço, ex: "assass", "cre"),
+    #     ordenada por popularidade;
+    #  B) busca nativa por relevância (cobre casos como "assassins" -> "Assassin’s", erros leves etc.).
     if clean_search:
-        # com busca a IGDB ordena por relevância e não aceita "sort"
-        parts.append(f'search "{clean_search}";')
-    else:
-        if sort == "rating":
-            where.append("total_rating != null")
-        elif sort == "popular":
-            where.append("total_rating_count != null")
-        elif sort == "newest":
-            where.append("first_release_date != null")
-            where.append(f"first_release_date <= {int(time.time())}")
+        words = [w for w in clean_search.split() if w][:5]
+        contains = [f'name ~ *"{w}"*' for w in words]
 
-    parts.append(f"fields {GAME_FIELDS};")
-    parts.append("where " + " & ".join(where) + ";")
-    if not clean_search:
-        parts.append(f"sort {SORT_OPTIONS[sort]};")
-    parts.append(f"limit {page_size};")
-    parts.append(f"offset {(page - 1) * page_size};")
+        query_a = _build_query(
+            where + contains + ["total_rating_count != null"],
+            sort_clause=SORT_OPTIONS["popular"],
+            limit=page_size, offset=offset,
+        )
+        tasks = [_cached_igdb_post("games", query_a)]
+        if page == 1:
+            query_b = _build_query(where, search_text=clean_search, limit=page_size, offset=0)
+            tasks.append(_cached_igdb_post("games", query_b))
 
-    raw = await _cached_igdb_post("games", " ".join(parts))
+        outcomes = await asyncio.gather(*tasks, return_exceptions=True)
+
+        merged, seen, errors = [], set(), []
+        for outcome in outcomes:
+            if isinstance(outcome, Exception):
+                errors.append(outcome)
+                continue
+            for game in outcome:
+                if game["id"] not in seen:
+                    seen.add(game["id"])
+                    merged.append(game)
+
+        if not merged and errors:
+            raise errors[0]
+
+        results = [_normalize_game(g) for g in merged[:page_size]]
+        return {"results": results, "count": len(results)}
+
+    # ---------- LISTAGENS (explorar, trending, top) ----------
+    if sort == "rating":
+        where.append("total_rating != null")
+    elif sort == "popular":
+        where.append("total_rating_count != null")
+    elif sort == "newest":
+        where.append("first_release_date != null")
+        where.append(f"first_release_date <= {int(time.time())}")
+
+    query = _build_query(where, sort_clause=SORT_OPTIONS[sort], limit=page_size, offset=offset)
+    raw = await _cached_igdb_post("games", query)
     results = [_normalize_game(g) for g in raw]
     return {"results": results, "count": len(results)}
 
