@@ -29,7 +29,7 @@
 | **Linguagens** | HTML, JavaScript, Python |
 | **Frontend** | React + Tailwind CSS |
 | **Backend** | FastAPI |
-| **Banco de Dados** | SQLite |
+| **Banco de Dados** | Neon (PostgreSQL) |
 | **Autenticação** | JWT Token |
 | **API Externa** | [IGDB - Internet Game Database](https://www.igdb.com/) |
 
