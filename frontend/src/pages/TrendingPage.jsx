@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   TrendingUp, Star, Flame, Trophy, Sparkles, Zap, Loader2 
 } from 'lucide-react';
-import { getTrendingGames, getTopRatedGames } from '../lib/rawg'; 
+import { getTrendingGames, getTopRatedGames } from '../lib/igdb'; 
 import GameCard from '../components/games/GameCard';
 import GameDetailModal from '../components/games/GameDetailModal';
 

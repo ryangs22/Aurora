@@ -5,7 +5,7 @@ import StatusMenu from './StatusMenu';
 import RatingModal from './RatingModal';
 import AchievementsPanel from './AchievementsPanel';
 import HalfStars from './HalfStars';
-import { getGameDetails } from '../../lib/rawg';
+import { getGameDetails } from '../../lib/igdb';
 
 const TABS = [
   { id: 'info', label: 'Detalhes' },

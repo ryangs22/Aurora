@@ -6,7 +6,7 @@ import {
 import GameCard from '../components/games/GameCard';
 import GameDetailModal from '../components/games/GameDetailModal';
 
-import { searchGames, getExploreGames } from '../lib/rawg';
+import { searchGames, getExploreGames } from '../lib/igdb';
 
 function FilterInput({ label, values, onAdd, onRemove, placeholder }) {
   const [draft, setDraft] = useState('');
