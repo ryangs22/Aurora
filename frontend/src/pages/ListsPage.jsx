@@ -1,6 +1,22 @@
 import { useState, useMemo } from 'react';
 import { Plus, Edit2, Trash2, ListMusic, X, Check, ArrowLeft, GripVertical, Search } from 'lucide-react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import {
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+  useSortable,
+  arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import GameCard from '../components/games/GameCard';
 import GameDetailModal from '../components/games/GameDetailModal';
 
@@ -72,6 +88,40 @@ function ListCard({ list, games, onOpen, onEdit, onDelete }) {
   );
 }
 
+// Item da grade que pode ser arrastado e reordenado (dnd-kit)
+function SortableGameItem({ game, libraryEntry, onOpen }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: String(game.id) });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    // o card original fica "fantasma" no lugar enquanto o overlay segue o mouse
+    opacity: isDragging ? 0.35 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="relative group/item">
+      <div
+        ref={setActivatorNodeRef}
+        {...attributes}
+        {...listeners}
+        className="absolute top-2 left-2 z-20 p-2 rounded-xl bg-black/60 text-white/60 sm:text-white/20 hover:text-white/90 backdrop-blur-md opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-all cursor-grab active:cursor-grabbing touch-none"
+      >
+        <GripVertical className="w-4 h-4" />
+      </div>
+      <GameCard game={game} libraryEntry={libraryEntry} onClick={onOpen} />
+    </div>
+  );
+}
+
 export default function ListsPage({ appState }) {
   const { 
     state, createList, updateList, deleteList, reorderListGames,
@@ -88,6 +138,13 @@ export default function ListsPage({ appState }) {
   const [selectedGame, setSelectedGame] = useState(null);
   const [showAddGames, setShowAddGames] = useState(false);
   const [addSearch, setAddSearch] = useState('');
+  const [activeId, setActiveId] = useState(null);
+
+  // Só começa a arrastar depois de mover 5px (evita arrastar sem querer ao clicar)
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const libraryGames = useMemo(() => {
     return Object.keys(state.library)
@@ -114,12 +171,24 @@ export default function ListsPage({ appState }) {
     ? openList.gameIds.map(id => state.library[id]?.game).filter(Boolean)
     : [];
 
-  const onDragEnd = (result) => {
-    if (!result.destination || !openList) return;
-    const ids = Array.from(openList.gameIds);
-    const [removed] = ids.splice(result.source.index, 1);
-    ids.splice(result.destination.index, 0, removed);
-    reorderListGames(openList.id, ids);
+  const sortableIds = openListGames.map(g => String(g.id));
+  const activeGame = activeId ? openListGames.find(g => String(g.id) === activeId) : null;
+
+  const handleDragStart = ({ active }) => setActiveId(String(active.id));
+
+  const handleDragCancel = () => setActiveId(null);
+
+  const handleDragEnd = ({ active, over }) => {
+    setActiveId(null);
+    if (!over || active.id === over.id || !openList) return;
+
+    // Posições calculadas sobre gameIds (a lista real), não sobre a lista filtrada da tela
+    const ids = openList.gameIds.map(String);
+    const oldIndex = ids.indexOf(String(active.id));
+    const newIndex = ids.indexOf(String(over.id));
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    reorderListGames(openList.id, arrayMove(openList.gameIds, oldIndex, newIndex));
   };
 
   if (openList) {
@@ -211,38 +280,35 @@ export default function ListsPage({ appState }) {
             <p className="text-lg font-medium italic">Sua lista está orbitando o vazio...</p>
           </div>
         ) : (
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="list-games" direction="horizontal">
-              {(provided) => (
-                <div 
-                  ref={provided.innerRef} {...provided.droppableProps}
-                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
-                >
-                  {openListGames.map((game, index) => (
-                    <Draggable key={game.id} draggableId={String(game.id)} index={index}>
-                      {(prov, snapshot) => (
-                        <div 
-                          ref={prov.innerRef} {...prov.draggableProps}
-                          className={`relative group/item ${snapshot.isDragging ? 'z-50' : ''}`}
-                        >
-                          <div 
-                            {...prov.dragHandleProps}
-                            className="absolute top-2 left-2 z-20 p-2 rounded-xl bg-black/60 text-white/20 hover:text-white/90 backdrop-blur-md opacity-0 group-hover/item:opacity-100 transition-all cursor-grab active:cursor-grabbing"
-                          >
-                            <GripVertical className="w-4 h-4" />
-                          </div>
-                          <div className={snapshot.isDragging ? 'rotate-3 scale-105 shadow-2xl transition-transform' : ''}>
-                            <GameCard game={game} libraryEntry={state.library[game.id]} onClick={setSelectedGame} />
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+          >
+            <SortableContext items={sortableIds} strategy={rectSortingStrategy}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                {openListGames.map((game) => (
+                  <SortableGameItem
+                    key={game.id}
+                    game={game}
+                    libraryEntry={state.library[game.id]}
+                    onOpen={setSelectedGame}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+
+            {/* Card que acompanha o mouse enquanto arrasta */}
+            <DragOverlay>
+              {activeGame ? (
+                <div className="rotate-3 scale-105 shadow-2xl cursor-grabbing">
+                  <GameCard game={activeGame} libraryEntry={state.library[activeGame.id]} onClick={() => {}} />
                 </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
         )}
 
         {selectedGame && (

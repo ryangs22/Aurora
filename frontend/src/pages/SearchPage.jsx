@@ -190,7 +190,7 @@ export default function SearchPage({ appState }) {
         {isLoading ? (
           <div className="text-center py-32 flex flex-col items-center justify-center">
              <Loader2 className="w-12 h-12 text-purple-500 animate-spin mb-4" />
-             <p className="text-white/40 font-bold uppercase tracking-widest text-xs">Consultando banco de dados...</p>
+             <p className="text-white/40 font-bold uppercase tracking-widest text-xs">Rastreando jogos entre as estrelas...</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-32 rounded-3xl border border-dashed border-white/5 bg-white/[0.01]">
