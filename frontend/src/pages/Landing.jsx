@@ -10,6 +10,7 @@ import LibraryPage from './LibraryPage';
 import ListsPage from './ListsPage';
 import TrendingPage from './TrendingPage';
 import ProfilePage from './ProfilePage';
+import AuroraTitle from '../components/layout/AuroraTitle';
 
 export default function Landing() {
   const appState = useAppState();
@@ -49,10 +50,11 @@ export default function Landing() {
     };
 
     return (
-      <AppShell 
-        user={user || { name: "Explorador" }} 
-        onLogout={handleSairDoSistema} 
-        currentPage={currentPage} 
+      <AppShell
+        user={{ ...(user || { name: "Explorador" }), ...(appState.state.user || {}) }}
+        library={appState.state.library}
+        onLogout={handleSairDoSistema}
+        currentPage={currentPage}
         onNavigate={setCurrentPage}
       >
         {renderPage()}
@@ -88,15 +90,7 @@ export default function Landing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative inline-block">
-            <div className="absolute inset-0 blur-3xl bg-purple-600/20 rounded-full scale-150" />
-            <h1
-              className="relative text-6xl sm:text-7xl md:text-8xl font-black tracking-[0.18em] text-transparent bg-clip-text bg-gradient-to-b from-white via-white/90 to-white/50 select-none"
-              style={{ fontFamily: "'Orbitron', sans-serif", textShadow: '0 0 60px rgba(180,120,255,0.4)' }}
-            >
-              AURORA
-            </h1>
-          </div>
+          <AuroraTitle />
           <p className="mt-3 text-white/25 text-sm tracking-[0.3em] uppercase font-light">Game Tracker</p>
         </motion.div>
 

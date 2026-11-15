@@ -5,8 +5,10 @@ module.exports = {
   theme: {
   	extend: {
 		fontFamily: {
-  			main: ['Space Grotesk', 'sans-serif'],
-  			mono: ['Space Mono', 'monospace'],
+            sans: ['Space Grotesk', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            logo: ['"Cinzel Decorative"', 'Cinzel', 'serif'],
+            main: ['Space Grotesk', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
