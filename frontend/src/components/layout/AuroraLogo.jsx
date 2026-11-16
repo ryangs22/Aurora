@@ -1,11 +1,21 @@
-// Título "AURORA" com estrelas que cintilam como se fizessem parte das letras.
-// A fonte vem da classe "font-logo" (tailwind.config.js).
+// Logo "AURORA" da barra lateral, com estrelas que cintilam dentro da própria caixa do logo.
+// É memorizado (memo) e não recebe props que mudam: a animação só reinicia se o logo for
+// desmontado (sair da conta ou fechar o site), nunca por ações dentro do app.
+import { memo } from 'react';
 
+// Todas as posições ficam DENTRO da caixa do logo (0%–100%), em tamanhos pequenos.
 const STARS = [
-  { left: '4%',  top: '-22%', size: 0.55, delay: '0s' },    // ponta do A
-  { left: '47%', top: '-30%', size: 0.75, delay: '0.9s' },  // acima do centro
-  { left: '97%', top: '4%',   size: 0.45, delay: '1.7s' },  // fim do último A
-  { left: '27%', top: '96%',  size: 0.35, delay: '2.4s' },  // sob o U
+  { left: '4%',  top: '20%', size: 0.34, delay: '0s' },    // ponta superior do 1°A
+  { left: '20%', top: '82%',  size: 0.42, delay: '0.7s' }, // ponta inferior do 1°A
+  { left: '34%', top: '13%', size: 0.26, delay: '0.7s' },  // sob o U
+  { left: '25%', top: '47%', size: 0.26, delay: '2.9s' },  // dentro do U
+  { left: '52%', top: '80%', size: 0.30, delay: '1.7s' },  // ponta inferior do 1°R
+  { left: '35%', top: '24%', size: 0.20, delay: '1.7s' },  // ponta Superior do 1°R
+  { left: '57%', top: '47%', size: 0.40, delay: '2.1s' },  // dentro do O
+  { left: '69%', top: '24%', size: 0.37, delay: '2.5s' },  // ponta superior do 2°R
+  { left: '85%', top: '80%', size: 0.30, delay: '2.9s' },  // ponta inferior do 2°R
+  { left: '85%', top: '20%', size: 0.30, delay: '3.1s' },  // ponta superior do 1°A
+  { left: '99%', top: '82%', size: 0.45, delay: '3.5s' },  // ponta superior do 2°A
 ];
 
 function Sparkle({ size, delay, left, top }) {
@@ -21,19 +31,22 @@ function Sparkle({ size, delay, left, top }) {
   );
 }
 
-export default function AuroraLogo({ className = '', text = 'AURORA', weight = 400 }) {
+function AuroraLogo({ className = '', text = 'AURORA', weight = 400 }) {
   return (
-    <span className={`aurora-logo relative inline-block font-logo ${className}`} style={{ fontWeight: weight }}>
+    <span
+      className={`aurora-logo relative inline-block font-logo ${className}`}
+      style={{ fontWeight: weight, padding: '0.12em 0.08em' }}
+    >
       <style>{`
-        .aurora-logo { filter: drop-shadow(0 0 14px rgba(170,110,255,.45)); }
+        .aurora-logo { filter: drop-shadow(0 0 10px rgba(170,110,255,.4)); }
         .aurora-logo .aurora-text {
           background: linear-gradient(180deg, #fff 0%, #efe6ff 55%, #b9a2ec 100%);
           -webkit-background-clip: text; background-clip: text; color: transparent;
         }
         .aurora-sparkle {
           position: absolute; transform: translate(-50%, -50%);
-          filter: drop-shadow(0 0 4px #d9c2ff) drop-shadow(0 0 10px #a56bff);
-          animation: aurora-twinkle 3.2s ease-in-out infinite; opacity: 0;
+          filter: drop-shadow(0 0 3px #d9c2ff) drop-shadow(0 0 7px #a56bff);
+          animation: aurora-twinkle 3.6s ease-in-out infinite; opacity: 0;
         }
         @keyframes aurora-twinkle {
           0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(0deg); }
@@ -48,3 +61,5 @@ export default function AuroraLogo({ className = '', text = 'AURORA', weight = 4
     </span>
   );
 }
+
+export default memo(AuroraLogo);

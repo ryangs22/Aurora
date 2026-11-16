@@ -12,6 +12,21 @@ const NAV_ITEMS = [
   { id: 'profile', label: 'Perfil', icon: User },
 ];
 
+function NavLink({ item, active, onSelect }) {
+  const Icon = item.icon;
+  return (
+    <button
+      onClick={() => onSelect(item.id)}
+      className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${active
+        ? 'bg-purple-600/25 text-purple-300 border border-purple-500/30'
+        : 'text-white/40 hover:text-white/80 hover:bg-white/[0.05]'}`}
+    >
+      <Icon className="w-4 h-4 flex-shrink-0" />
+      <span>{item.label}</span>
+    </button>
+  );
+}
+
 // Tag (com caixa) + barra de progresso logo abaixo
 function RankTag({ rank, nextRank, count, prefix = '', icon: Icon }) {
   const pct = getProgress(rank, nextRank, count);
@@ -34,51 +49,9 @@ function RankTag({ rank, nextRank, count, prefix = '', icon: Icon }) {
   );
 }
 
-export default function AppShell({ user, library, onLogout, currentPage, onNavigate, children }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  // Mesmos cálculos do Perfil (jogos na biblioteca, jogos avaliados)
-  const stats = useMemo(() => {
-    const entries = Object.values(library || {}).filter(g => g && g.status);
-    const genreCount = {};
-    entries.forEach(g => {
-      const data = g.game || g.gameInfo || g;
-      (Array.isArray(data.genres) ? data.genres : []).forEach(x => {
-        if (x && typeof x === 'string' && x !== 'N/A') genreCount[x] = (genreCount[x] || 0) + 1;
-      });
-    });
-    const sorted = Object.entries(genreCount).sort((a, b) => b[1] - a[1]);
-    return {
-      libCount: entries.length,
-      ratedCount: entries.filter(g => Number(g.rating) > 0).length,
-      hours: Math.round(entries.reduce((sum, g) => sum + (parseFloat(g.hoursPlayed) || 0), 0)),
-      favGenre: sorted[0]?.[0] || '—',
-      leastGenre: sorted.length > 1 ? sorted[sorted.length - 1][0] : '—',
-    };
-  }, [library]);
-
-  const libRank = getRank(LIB_RANKS, stats.libCount);
-  const libNext = getNextRank(LIB_RANKS, stats.libCount);
-  const title = getRank(RATING_TITLES, stats.ratedCount);
-  const titleNext = getNextRank(RATING_TITLES, stats.ratedCount);
-
-  const NavLink = ({ item }) => {
-    const Icon = item.icon;
-    const active = currentPage === item.id;
-    return (
-      <button
-        onClick={() => { onNavigate(item.id); setMobileOpen(false); }}
-        className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${active
-          ? 'bg-purple-600/25 text-purple-300 border border-purple-500/30'
-          : 'text-white/40 hover:text-white/80 hover:bg-white/[0.05]'}`}
-      >
-        <Icon className="w-4 h-4 flex-shrink-0" />
-        <span>{item.label}</span>
-      </button>
-    );
-  };
-
-  const Sidebar = () => (
+function SidebarContent({ user, info, currentPage, onNavigate, onLogout }) {
+  const { stats, libRank, libNext, title, titleNext } = info;
+  return (
     <div className="flex flex-col h-full p-4 overflow-y-auto">
       <div className="flex items-center gap-2.5 mb-8 px-2">
         <Sparkles className="w-5 h-5 text-purple-400" />
@@ -86,14 +59,16 @@ export default function AppShell({ user, library, onLogout, currentPage, onNavig
       </div>
 
       <nav className="flex flex-col gap-1">
-        {NAV_ITEMS.map(item => <NavLink key={item.id} item={item} />)}
+        {NAV_ITEMS.map(item => (
+          <NavLink key={item.id} item={item} active={currentPage === item.id} onSelect={onNavigate} />
+        ))}
       </nav>
 
-      {/* Cartão do usuário: ocupa o rodapé da barra com informações úteis */}
+      {/* Cartão do usuário */}
       <div className="mt-auto pt-4">
         <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3">
           <button
-            onClick={() => { onNavigate('profile'); setMobileOpen(false); }}
+            onClick={() => onNavigate('profile')}
             className="flex items-center gap-3 w-full text-left group"
             title="Abrir perfil"
           >
@@ -146,6 +121,39 @@ export default function AppShell({ user, library, onLogout, currentPage, onNavig
       </div>
     </div>
   );
+}
+
+export default function AppShell({ user, library, onLogout, currentPage, onNavigate, children }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const info = useMemo(() => {
+    const entries = Object.values(library || {}).filter(g => g && g.status);
+    const genreCount = {};
+    entries.forEach(g => {
+      const data = g.game || g.gameInfo || g;
+      (Array.isArray(data.genres) ? data.genres : []).forEach(x => {
+        if (x && typeof x === 'string' && x !== 'N/A') genreCount[x] = (genreCount[x] || 0) + 1;
+      });
+    });
+    const sorted = Object.entries(genreCount).sort((a, b) => b[1] - a[1]);
+    const libCount = entries.length;
+    const ratedCount = entries.filter(g => Number(g.rating) > 0).length;
+    return {
+      stats: {
+        libCount,
+        ratedCount,
+        hours: Math.round(entries.reduce((sum, g) => sum + (parseFloat(g.hoursPlayed) || 0), 0)),
+        favGenre: sorted[0]?.[0] || '—',
+        leastGenre: sorted.length > 1 ? sorted[sorted.length - 1][0] : '—',
+      },
+      libRank: getRank(LIB_RANKS, libCount),
+      libNext: getNextRank(LIB_RANKS, libCount),
+      title: getRank(RATING_TITLES, ratedCount),
+      titleNext: getNextRank(RATING_TITLES, ratedCount),
+    };
+  }, [library]);
+
+  const handleNavigate = (id) => { onNavigate(id); setMobileOpen(false); };
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
@@ -161,7 +169,7 @@ export default function AppShell({ user, library, onLogout, currentPage, onNavig
       {/* Sidebar Desktop */}
       <aside className="hidden md:flex fixed left-0 top-0 h-full w-60 flex-col z-[60]"
         style={{ background: 'rgba(8,4,20,0.75)', backdropFilter: 'blur(20px)', borderRight: '1px solid rgba(255,255,255,0.06)' }}>
-        <Sidebar />
+        <SidebarContent user={user} info={info} currentPage={currentPage} onNavigate={handleNavigate} onLogout={onLogout} />
       </aside>
 
       {/* Mobile header */}
@@ -179,7 +187,7 @@ export default function AppShell({ user, library, onLogout, currentPage, onNavig
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <aside className="absolute left-0 top-0 h-full w-64 z-[80]"
             style={{ background: 'rgba(8,4,20,0.95)', backdropFilter: 'blur(20px)', borderRight: '1px solid rgba(255,255,255,0.08)' }}>
-            <Sidebar />
+            <SidebarContent user={user} info={info} currentPage={currentPage} onNavigate={handleNavigate} onLogout={onLogout} />
           </aside>
         </div>
       )}

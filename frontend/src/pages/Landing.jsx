@@ -90,8 +90,7 @@ export default function Landing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <AuroraTitle />
-          <p className="mt-3 text-white/25 text-sm tracking-[0.3em] uppercase font-light">Game Tracker</p>
+          <AuroraTitle maxWidth={600} />
         </motion.div>
 
         <div className="relative w-full max-w-md mx-auto">
